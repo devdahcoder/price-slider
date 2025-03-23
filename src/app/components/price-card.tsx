@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react'
-import { motion } from 'motion/react';
-import SquareCheckbox from './checkbox,';
+import { motion } from "motion/react";
+import React, { useRef, useState } from "react";
+import SquareCheckbox from "./checkbox,";
 
 type Props = {
 	id: number;
@@ -9,6 +9,7 @@ type Props = {
 	hasDiscount?: boolean;
 	featuresTitle: string;
 	features: string[];
+	isFocused?: boolean;
 };
 
 interface Position {
@@ -16,9 +17,16 @@ interface Position {
 	y: number;
 }
 
-
 const PriceCard = (category: Props) => {
-	const { id, title, price, features, featuresTitle, hasDiscount } = category;
+	const {
+		id,
+		title,
+		price,
+		features,
+		featuresTitle,
+		hasDiscount,
+		isFocused: isPlanFocused,
+	} = category;
 
 	const divRef = useRef<HTMLDivElement>(null);
 	const [isFocused, setIsFocused] = useState<boolean>(false);
@@ -71,11 +79,15 @@ const PriceCard = (category: Props) => {
 			onBlur={handleBlur}
 			onMouseEnter={handleMouseEnter}
 			onMouseLeave={handleMouseLeave}
-			className="relative border rounded-md px-6 py-6 w-full bg-neutral-900 overflow-hidden gap-y-7 flex flex-col"
+			className={`relative rounded-xl px-6 py-6 w-full ${
+				isPlanFocused
+					? "bg-neutral-800 ring-1 ring-white/30"
+					: "bg-neutral-900"
+			} overflow-hidden gap-y-7 flex flex-col`}
 		>
 			<motion.div
 				initial={{ opacity: 0, y: 50 }}
-				animate={{ opacity: 1, y: 0, }}
+				animate={{ opacity: 1, y: 0 }}
 				transition={{
 					duration: 0.5,
 				}}
@@ -91,7 +103,14 @@ const PriceCard = (category: Props) => {
 						<p>{title}</p>
 					</div>
 					<div className="flex flex-row items-center gap-x-1.5 text-4xl">
-						<p>${price}</p>
+						<motion.p
+							key={price}
+							initial={{ opacity: 0, y: -10 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ duration: 0.3 }}
+						>
+							${price}
+						</motion.p>
 						{hasDiscount && (
 							<span className="rounded-sm py-0.5 px-1 border text-sm text-neutral-500">
 								-15%
@@ -111,7 +130,10 @@ const PriceCard = (category: Props) => {
 					<motion.div className="text-white text-sm">
 						<ul className="list-none flex flex-col gap-y-3.5">
 							{features.map((feature: string, index: number) => (
-								<li className='flex flex-row items-center justify-start gap-x-3' key={index}>
+								<li
+									className="flex flex-row items-center justify-start gap-x-3"
+									key={index}
+								>
 									<SquareCheckbox />
 									<div>
 										<p>{feature}</p>
@@ -123,11 +145,20 @@ const PriceCard = (category: Props) => {
 				</motion.div>
 			</motion.div>
 
-			<a href="http://" className='w-full flex flex-row items-center justify-center py-2.5  text-center text-black bg-white border-black rounded-md'>
+			<motion.a
+				href="http://"
+				className={`w-full flex flex-row items-center justify-center py-2.5 text-center ${
+					isPlanFocused
+						? "bg-white text-black"
+						: "bg-neutral-800 text-white hover:bg-neutral-700"
+				} rounded-md transition-colors`}
+				whileHover={{ scale: 1.02 }}
+				whileTap={{ scale: 0.98 }}
+			>
 				Get Started
-			</a>
+			</motion.a>
 		</motion.div>
 	);
 };
 
-export default PriceCard
+export default PriceCard;

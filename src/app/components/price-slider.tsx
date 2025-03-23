@@ -1,9 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+	Dispatch,
+	SetStateAction,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
 import { motion } from "motion/react";
 type Props = {
 	min?: number;
 	max?: number;
 	step?: number;
+	value: number;
+	setValue: Dispatch<SetStateAction<number>>;
 	defaultValue?: number;
 	onChangeHandler?: (n: any) => void;
 };
@@ -14,11 +22,12 @@ const PriceSlider = ({
 	step = 1,
 	defaultValue = 0,
 	onChangeHandler,
+	value,
+	setValue,
 }: Props) => {
 	const values = [
 		5000, 50000, 100000, 200000, 500000, 1000000, 1500000, 2500000, 3000000,
 	];
-	const [value, setValue] = useState(defaultValue);
 	const [isDragging, setIsDragging] = useState(false);
 	const sliderRef = useRef<HTMLDivElement>(null);
 
